@@ -38,14 +38,15 @@ class Field:
         self.field_color = colors.WHITE
         self.center_color = colors.BLUE
         self.perimeter_color = colors.WHITE
-        self.perimeter_width = 2
+        self.perimeter_width = 1
         self.point_size = 3
        
         
     def get_pixel_field_size(self):
         return ((self.w-1)*self.f+self.left_margin+self.right_margin,(self.l+1)*self.f+self.top_margin+self.bottom_margin)
 
-    def draw_move(self, window: pygame.Surface, from_position, direction: int)
+    def draw_move(self, window: pygame.Surface, from_position, direction: int):
+        print("TODO")
         
 
 
@@ -54,10 +55,10 @@ class Field:
         # actual field:
         for c in range(self.w):
             for r in range(self.l):
-                pygame.draw.circle(window, self.field_color, (self.left_margin+c*self.f,self.top_margin+(r+1)*self.f),2)
+                pygame.draw.circle(window, self.field_color, (self.left_margin+c*self.f,self.top_margin+(r+1)*self.f),self.point_size)
         pygame.draw.circle(window, colors.BLUE, (self.left_margin+self.center_point[0]*self.f, self.top_margin+self.center_point[1]*self.f), self.point_size) # center point
         # goal
         for c in range(self.g):
             pygame.draw.circle(window, self.field_color, (self.left_margin+self.f*(c+(self.w-self.g)//2),self.top_margin), self.point_size)
-            pygame.draw.circle(window, self.field_color, (self.left_margin+self.f*(c+(self.w-self.g)//2),self.top_margin+(self.f+1)*self.l), self.point_size)
+            pygame.draw.circle(window, self.field_color, (self.left_margin+self.f*(c+(self.w-self.g)//2),self.top_margin+(self.l+1)*self.f), self.point_size)
         
