@@ -6,3 +6,6 @@ class State:
         self.current_position = (field.w//2,field.l//2)
         self.moves = np.zeros((field.w,field.l), dtype=np.uint8)
 
+    def draw_possible_moves(self, window):
+        
+
