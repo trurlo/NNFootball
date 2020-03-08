@@ -40,23 +40,28 @@ class Field:
         self.perimeter_color = colors.WHITE
         self.perimeter_width = 1
         self.point_size = 3
-       
-        
+               
     def get_pixel_field_size(self):
         return ((self.w-1)*self.f+self.left_margin+self.right_margin,(self.l+1)*self.f+self.top_margin+self.bottom_margin)
 
-    def draw_move(self, window: pygame.Surface, from_position, direction: int):
-        print("TODO")
+    def get_point_coords(self, position):
+        return (self.left_margin+position[0]*self.f,self.top_margin+(position[1]+1)*self.f)
+
+    def get_rel_pos(self, position, direction):
         
 
-
+    def draw_move(self, window: pygame.Surface, from_position, direction: int):
+        print('TODO')
+        
+        
     def draw(self, window: pygame.Surface):
         pygame.draw.polygon(window, self.perimeter_color, self.perimeter_points, self.perimeter_width) # perimeter lines
         # actual field:
         for c in range(self.w):
             for r in range(self.l):
-                pygame.draw.circle(window, self.field_color, (self.left_margin+c*self.f,self.top_margin+(r+1)*self.f),self.point_size)
-        pygame.draw.circle(window, colors.BLUE, (self.left_margin+self.center_point[0]*self.f, self.top_margin+self.center_point[1]*self.f), self.point_size) # center point
+                pygame.draw.circle(window, self.field_color, self.get_point_coords((c, r)),self.point_size)
+        # center point
+        pygame.draw.circle(window, colors.BLUE, (self.left_margin+self.center_point[0]*self.f, self.top_margin+self.center_point[1]*self.f), self.point_size) 
         # goal
         for c in range(self.g):
             pygame.draw.circle(window, self.field_color, (self.left_margin+self.f*(c+(self.w-self.g)//2),self.top_margin), self.point_size)
