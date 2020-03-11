@@ -66,7 +66,7 @@ class State:
     def undo(self):
         if self.moves: # if there are any moves to undo, ie. if the list is not empty
             dir = self.moves.pop() # get and remove last move from stack
-            self.whose_turn = dir & 128 # restore whose_turn from 7th bit
+            self.whose_turn = (dir & 128)>>7 # restore whose_turn from 7th bit
             dir = dir&7 # and strip bits 3-7
             self.tracks[self.current_position] = self.tracks[self.current_position] &~(1<<(dir+4)%8)  # release backward track
             self.current_position = directions.go(self.current_position,(dir+4)%8) # backtrack one move
@@ -76,12 +76,14 @@ class State:
         fn = open("state.txt","w")
         fn.write("current_position: "+str(self.current_position))
         fn.write("\n\n")
+        fn.write("whose turn: "+str(self.whose_turn))
+        fn.write("\n\n")
         for move in self.moves: 
             fn.write(str(move)+' ')
         fn.write("\n\n")
-        for c in range(self.field.w):
-            for r in range(self.field.l):
-                fn.write(str(self.tracks[c,r])+' ')
+        for r in range(self.field.l):
+            for c in range(self.field.w):
+                fn.write(str(self.tracks[c,r]).zfill(3)+' ')
             fn.write("\n")
         fn.close()
             
