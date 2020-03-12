@@ -15,7 +15,7 @@ state = State(fld,win)
 running = True
 
 while running:
-    clock.tick(FPS)
+    #clock.tick(FPS)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -29,7 +29,7 @@ while running:
             if event.key == pygame.K_r: # move at random
                 state.move_random()
             if event.key == pygame.K_w: # move at random till dead_end()
-                state.randomize()
+                state = state.randomize(True)
             if event.key in (pygame.K_u, pygame.K_KP5): # undo last move
                 state.undo()
             if event.key == pygame.K_d: # dump state to "state.txt"

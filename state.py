@@ -3,6 +3,7 @@ import numpy as np
 import directions
 import pygame
 import random
+import colors
 
 class State:
     def __init__(self, field: Field, window):
@@ -83,9 +84,9 @@ class State:
     def dump(self):
         fn = open("state.txt","w")
         fn.write("current_position: "+str(self.current_position))
-        fn.write("\n")
-        fn.write("whose turn: "+str(self.whose_turn)) 
-        fn.write("possible_directions: "+str(self.get_possible_directions()))
+        fn.write("\nwhose turn: "+str(self.whose_turn)) 
+        fn.write("\npossible_directions: "+str(self.get_possible_directions()))
+        fn.write("\nmove count: "+str(len(self.moves)))
         fn.write("\nmoves:\n")
         for move in self.moves: 
             fn.write(str(move)+' ')
@@ -104,6 +105,27 @@ class State:
         if possible_directions:
             self.move(random.sample(set(possible_directions),1)[0])
 
-    def randomize(self):
-        while not self.dead_end():
-            self.move_random()            
+    def randomize(self, show):
+        maxm = 0
+        mstate = self;
+        for i in range(1000):
+            while not self.dead_end():
+                self.move_random()
+            if show:
+                self.window.fill(colors.BLACK)
+                self.draw_all_possible_moves()
+                self.field.draw(self.window)
+                self.draw_moves()
+                self.draw_ball()
+                self.draw_whose_turn()
+                pygame.display.flip()
+
+            if len(self.moves) > maxm:
+                maxm = len(self.moves)
+                mstate = self
+            #print("iteration: "+str(i)+"; moves: "+str(len(self.moves)))
+            self = State(self.field, self.window)
+        #print("now moves: "+str(len(mstate.moves)))
+        return mstate
+        
+        
