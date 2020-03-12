@@ -24,8 +24,12 @@ while running:
                 state.move(directions.key_map[event.key])
             if event.key == pygame.K_q: # quit
                 running = False
-            if event.key == pygame.K_r: # reset state
+            if event.key == pygame.K_z: # reset state
                 state = State(fld,win)
+            if event.key == pygame.K_r: # move at random
+                state.move_random()
+            if event.key == pygame.K_w: # move at random till dead_end()
+                state.randomize()
             if event.key in (pygame.K_u, pygame.K_KP5): # undo last move
                 state.undo()
             if event.key == pygame.K_d: # dump state to "state.txt"

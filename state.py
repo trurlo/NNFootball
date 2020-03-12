@@ -2,6 +2,7 @@ from field import Field
 import numpy as np
 import directions
 import pygame
+import random
 
 class State:
     def __init__(self, field: Field, window):
@@ -52,7 +53,7 @@ class State:
             pos = directions.go(pos,move&7)         
 
     def can_move(self, from_position, direction):
-        return not (self.tracks[from_position]&1<<direction)
+        return not (self.tracks[from_position]&(1<<direction))
 
     def move(self, direction):
         if self.can_move(self.current_position, direction):
@@ -72,18 +73,37 @@ class State:
             self.current_position = directions.go(self.current_position,(dir+4)%8) # backtrack one move
             self.tracks[self.current_position] = self.tracks[self.current_position] &~(1<<dir) # release forward track
 
+    def get_possible_directions(self):
+        res = []
+        for i in range(8):
+            if not self.tracks[self.current_position] & (1<<i):
+                res.append(i)
+        return res 
+
     def dump(self):
         fn = open("state.txt","w")
         fn.write("current_position: "+str(self.current_position))
-        fn.write("\n\n")
-        fn.write("whose turn: "+str(self.whose_turn))
-        fn.write("\n\n")
+        fn.write("\n")
+        fn.write("whose turn: "+str(self.whose_turn)) 
+        fn.write("possible_directions: "+str(self.get_possible_directions()))
+        fn.write("\nmoves:\n")
         for move in self.moves: 
             fn.write(str(move)+' ')
-        fn.write("\n\n")
+        fn.write("\ntracks:\n")
         for r in range(self.field.l):
             for c in range(self.field.w):
                 fn.write(str(self.tracks[c,r]).zfill(3)+' ')
             fn.write("\n")
         fn.close()
-            
+
+    def dead_end(self):
+        return self.tracks[self.current_position] == 255
+     
+    def move_random(self):
+        possible_directions = self.get_possible_directions()
+        if possible_directions:
+            self.move(random.sample(set(possible_directions),1)[0])
+
+    def randomize(self):
+        while not self.dead_end():
+            self.move_random()            
